@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kartaviy Old Computer Game</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#252525;
+    color:#171717;
+    font-family:"Courier New",monospace;
+    min-height:100vh;
+}
+
+button,input,select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+    background:#dedbd1;
+    border:2px solid #333;
+    padding:8px 12px;
+}
+
+button:hover{
+    background:#fff;
+}
+
+#desktop{
+    min-height:100vh;
+    padding:18px;
+    background:
+        radial-gradient(circle at 20% 20%,#3b3b3b,#252525 50%),
+        #252525;
+}
+
+.topbar{
+    background:#111;
+    color:#eee;
+    border:2px solid #777;
+    padding:10px 14px;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.desktop-area{
+    display:grid;
+    grid-template-columns:180px 1fr;
+    gap:18px;
+    margin-top:18px;
+}
+
+.icons{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.icon{
+    color:#fff;
+    background:#333;
+    border:1px solid #666;
+    padding:12px;
+    cursor:pointer;
+}
+
+.icon:hover{
+    background:#444;
+}
+
+.window{
+    background:#c9c6bb;
+    border:3px solid #111;
+    min-height:700px;
+    box-shadow:8px 8px 0 #111;
+}
+
+.window-title{
+    background:#222;
+    color:white;
+    padding:9px;
+    border-bottom:3px solid #111;
+    display:flex;
+    justify-content:space-between;
+}
+
+.sheet{
+    background:#f1eee4;
+    margin:18px;
+    padding:18px;
+    min-height:600px;
+    border:1px solid #777;
+    box-shadow:3px 3px 0 #777;
+}
+
+h1,h2,h3{
+    margin-top:0;
+}
+
+.paper-line{
+    border-bottom:1px dashed #888;
+    padding:7px 0;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:12px;
+}
+
+.card{
+    border:2px solid #444;
+    background:#e5e1d5;
+    padding:12px;
+}
+
+.card img{
+    display:block;
+    width:100px;
+    height:80px;
+    object-fit:contain;
+    margin:auto;
+}
+
+.money{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.danger{
+    border-color:#8b2222;
+}
+
+.good{
+    border-color:#276327;
+}
+
+.character{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.character img{
+    width:70px;
+    height:70px;
+}
+
+.status{
+    padding:5px 8px;
+    border:1px solid #555;
+    background:#ddd;
+    display:inline-block;
+}
+
+.battle{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+    border:3px solid #111;
+}
+
+.side{
+    min-height:360px;
+    padding:15px;
+    background:#eee9dc;
+}
+
+.side:first-child{
+    border-right:3px solid #111;
+}
+
+.fighter{
+    border:1px solid #555;
+    padding:8px;
+    margin:7px 0;
+    background:#ddd;
+}
+
+.log{
+    background:#171717;
+    color:#ddd;
+    padding:12px;
+    min-height:120px;
+    max-height:220px;
+    overflow:auto;
+    white-space:pre-line;
+}
+
+.hidden{
+    display:none!important;
+}
+
+.small{
+    font-size:12px;
+    color:#555;
+}
+
+@media(max-width:800px){
+    .desktop-area{
+        grid-template-columns:1fr;
+    }
+
+    .icons{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .window{
+        min-height:600px;
+    }
+
+    .sheet{
+        margin:8px;
+        padding:12px;
+    }
+
+    .battle{
+        grid-template-columns:1fr;
+    }
+
+    .side:first-child{
+        border-right:0;
+        border-bottom:3px solid #111;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="desktop">
+
+    <div class="topbar">
+        <div>KARTAVIY OLD COMPUTER</div>
+        <div id="clock">00:00</div>
+    </div>
+
+    <div class="desktop-area">
+
+        <div class="icons">
+            <div class="icon" onclick="openSheet('character')">👤 Персонаж</div>
+            <div class="icon" onclick="openSheet('city')">🏙️ Город</div>
+            <div class="icon" onclick="openSheet('people')">👥 Люди</div>
+            <div class="icon" onclick="openSheet('army')">🪖 Армия</div>
+            <div class="icon" onclick="openSheet('battle')">⚔️ Бой</div>
+            <div class="icon" onclick="openSheet('transport')">🚗 Машины</div>
+            <div class="icon" onclick="openSheet('weapons')">🔫 Оружие</div>
+            <div class="icon" onclick="openSheet('mine')">⛏️ Шахта</div>
+            <div class="icon" onclick="openSheet('treasury')">💰 Казна</div>
+            <div class="icon" onclick="openSheet('bank')">🏦 Банк</div>
+            <div class="icon" onclick="openSheet('houses')">🏠 Дома</div>
+            <div class="icon" onclick="openSheet('saves')">💾 Сохранение</div>
+        </div>
+
+        <div class="window">
+
+            <div class="window-title">
+                <span id="windowTitle">Главный лист</span>
+                <button onclick="closeWindow()">X</button>
+            </div>
+
+            <div id="sheet" class="sheet"></div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+/* =========================================================
+   ДАННЫЕ МИРА
+========================================================= */
+
+const defaultWorld = {
+    day:1,
+
+    treasury:184000,
+
+    characters:[
+        {
+            id:"thomas",
+            name:"Томас",
+            role:"Мэр",
+            rank:"Главный мэр",
+            money:25000,
+            bank:50000,
+            health:100,
+            home:"Дом мэра",
+            vehicle:"sportcar",
+            weapon:"pistol",
+            metal:0,
+            mineUsed:false,
+            girlfriend:"yana"
+        },
+
+        {
+            id:"yana",
+            name:"Яна",
+            role:"Девушка",
+            rank:"",
+            money:12000,
+            bank:10000,
+            health:100,
+            home:"Дом",
+            vehicle:"sedan",
+            weapon:"",
+            metal:0,
+            mineUsed:false
+        },
+
+        {
+            id:"ivan",
+            name:"Иван",
+            role:"Шахтёр",
+            rank:"",
+            money:8000,
+            bank:3000,
+            health:100,
+            home:"Дом",
+            vehicle:"van",
+            weapon:"",
+            metal:0,
+            mineUsed:false
+        },
+
+        {
+            id:"alex",
+            name:"Алексей",
+            role:"Военный",
+            rank:"Сержант",
+            money:11000,
+            bank:5000,
+            health:100,
+            home:"Военная база",
+            vehicle:"military_car",
+            weapon:"rifle",
+            metal:0,
+            mineUsed:false
+        },
+
+        {
+            id:"maks",
+            name:"Макс",
+            role:"Спецназ",
+            rank:"Офицер",
+            money:16000,
+            bank:7000,
+            health:100,
+            home:"Военная база",
+            vehicle:"jeep",
+            weapon:"smg",
+            metal:0,
+            mineUsed:false
+        },
+
+        {
+            id:"veteran",
+            name:"Виктор",
+            role:"Ветеран",
+            rank:"Капитан в отставке",
+            money:45000,
+            bank:80000,
+            health:100,
+            home:"Большой дом",
+            vehicle:"jeep",
+            weapon:"revolver",
+            metal:0,
+            mineUsed:false
+        },
+
+        {
+            id:"criminal",
+            name:"Роман",
+            role:"Преступник",
+            rank:"",
+            money:19000,
+            bank:1000,
+            health:100,
+            home:"Фургон",
+            vehicle:"van_house",
+            weapon:"shotgun",
+            metal:0,
+            mineUsed:false
+        }
+    ],
+
+    vehicles:{
+        sportcar:{name:"Спортивная машина",emoji:"🏎️"},
+        jeep:{name:"Джип",emoji:"🚙"},
+        truck:{name:"Грузовик",emoji:"🚚"},
+        van:{name:"Фургон",emoji:"🚐"},
+        armored_van:{name:"Бронированный автомобиль",emoji:"🚐"},
+        sedan:{name:"Легковая машина",emoji:"🚗"},
+        police_car:{name:"Полицейская машина",emoji:"🚓"},
+        military_car:{name:"Военная машина",emoji:"🚙"},
+        van_house:{name:"Фургон-дом",emoji:"🏠"}
+    },
+
+    weapons:{
+        pistol:{name:"Пистолет",emoji:"🔫"},
+        revolver:{name:"Револьвер",emoji:"🔫"},
+        smg:{name:"Автомат",emoji:"🔫"},
+        rifle:{name:"Винтовка",emoji:"🔫"},
+        shotgun:{name:"Дробовик",emoji:"🔫"},
+        sniper:{name:"Снайперская винтовка",emoji:"🔭"},
+        machinegun:{name:"Пулемёт",emoji:"🔫"},
+        knife:{name:"Нож",emoji:"🔪"},
+        grenade:{name:"Граната",emoji:"💣"}
+    }
+};
+
+let world = JSON.parse(localStorage.getItem("kartaviy_old_game")) || structuredClone(defaultWorld);
+
+let currentPlayerId =
+    localStorage.getItem("kartaviy_current_player") || "thomas";
+
+let battleState = null;
+
+
+/* =========================================================
+   БАЗОВЫЕ ФУНКЦИИ
+========================================================= */
+
+function saveWorld(){
+    localStorage.setItem("kartaviy_old_game",JSON.stringify(world));
+    localStorage.setItem("kartaviy_current_player",currentPlayerId);
+}
+
+function player(){
+    return world.characters.find(c=>c.id===currentPlayerId);
+}
+
+function money(n){
+    return Number(n).toLocaleString("ru-RU")+" ₽";
+}
+
+function openSheet(type){
+    const titles={
+        character:"Персонаж",
+        city:"Город",
+        people:"Люди",
+        army:"Армия",
+        battle:"Бой",
+        transport:"Транспорт",
+        weapons:"Оружие",
+        mine:"Шахта",
+        treasury:"Казна города",
+        bank:"Банк",
+        houses:"Дома",
+        saves:"Сохранение"
+    };
+
+    document.getElementById("windowTitle").textContent=titles[type]||"Лист";
+
+    const funcs={
+        character:renderCharacter,
+        city:renderCity,
+        people:renderPeople,
+        army:renderArmy,
+        battle:renderBattle,
+        transport:renderTransport,
+        weapons:renderWeapons,
+        mine:renderMine,
+        treasury:renderTreasury,
+        bank:renderBank,
+        houses:renderHouses,
+        saves:renderSaves
+    };
+
+    funcs[type]();
+}
+
+function closeWindow(){
+    document.getElementById("sheet").innerHTML=
+        "<h2>Рабочий стол</h2><p>Выберите лист слева.</p>";
+    document.getElementById("windowTitle").textContent="Рабочий стол";
+}
+
+
+/* =========================================================
+   ПЕРСОНАЖ
+========================================================= */
+
+function renderCharacter(){
+
+    const p=player();
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Текущий персонаж</h2>
+
+        <div class="card character">
+            <img src="assets/people/${p.id}.PNG"
+                 onerror="this.style.display='none'">
+
+            <div>
+                <h3>${p.name}</h3>
+                <div>${p.role}</div>
+                <div>${p.rank}</div>
+                <div>Здоровье: ${p.health}</div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="grid">
+
+            <div class="card">
+                <b>Личные деньги</b>
+                <div class="money">${money(p.money)}</div>
+            </div>
+
+            <div class="card">
+                <b>Банк</b>
+                <div class="money">${money(p.bank)}</div>
+            </div>
+
+            <div class="card">
+                <b>Дом</b>
+                <div>${p.home}</div>
+            </div>
+
+            <div class="card">
+                <b>Машина</b>
+                <div>${world.vehicles[p.vehicle]?.name || "Нет"}</div>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <h3>Играть за другого персонажа</h3>
+
+        <div class="grid">
+            ${world.characters.map(c=>`
+                <div class="card">
+                    <b>${c.name}</b><br>
+                    ${c.role}<br>
+                    ${c.rank || ""}
+                    <br><br>
+                    <button onclick="switchCharacter('${c.id}')">
+                        Играть за него
+                    </button>
+                </div>
+            `).join("")}
+        </div>
+    `;
+}
+
+function switchCharacter(id){
+    currentPlayerId=id;
+    saveWorld();
+    openSheet("character");
+}
+
+
+/* =========================================================
+   ГОРОД
+========================================================= */
+
+function renderCity(){
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Город</h2>
+
+        <div class="paper-line">День: ${world.day}</div>
+        <div class="paper-line">Казна: ${money(world.treasury)}</div>
+
+        <br>
+
+        <div class="grid">
+
+            <div class="card">🏛️ Мэрия</div>
+            <div class="card">🪖 Военная база</div>
+            <div class="card">⛏️ Шахта</div>
+            <div class="card">🏦 Банк</div>
+            <div class="card">🏠 Жилые дома</div>
+            <div class="card">🚗 Автопарк</div>
+            <div class="card">🏪 Магазин</div>
+            <div class="card">⚔️ Площадка боя</div>
+
+        </div>
+
+        <hr>
+
+        <p>
+            Это общий мир. Переключение персонажа не создаёт новый город —
+            все персонажи продолжают жить в одной сохранённой игре.
+        </p>
+    `;
+}
+
+
+/* =========================================================
+   ЛЮДИ
+========================================================= */
+
+function renderPeople(){
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Люди</h2>
+
+        <div class="grid">
+            ${world.characters.map(c=>`
+                <div class="card">
+                    <div class="character">
+                        <img src="assets/people/${c.id}.PNG"
+                             onerror="this.style.display='none'">
+                        <div>
+                            <b>${c.name}</b><br>
+                            ${c.role}<br>
+                            ${c.rank || "Без звания"}
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    Здоровье: ${c.health}<br>
+                    Деньги: ${money(c.money)}<br>
+                    Дом: ${c.home}
+                </div>
+            `).join("")}
+        </div>
+    `;
+}
+
+
+/* =========================================================
+   АРМИЯ
+========================================================= */
+
+function renderArmy(){
+
+    const army=world.characters.filter(c=>
+        ["Военный","Спецназ","Ветеран"].includes(c.role)
+    );
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Военная база</h2>
+
+        <p>
+            Основная боевая структура — военные и спецназ.
+        </p>
+
+        <div class="grid">
+            ${army.map(c=>`
+                <div class="card">
+                    <b>${c.name}</b><br>
+                    ${c.role}<br>
+                    ${c.rank}<br>
+                    Здоровье: ${c.health}<br>
+                    Оружие:
+                    ${world.weapons[c.weapon]?.name || "нет"}
+                </div>
+            `).join("")}
+        </div>
+    `;
+}
+
+
+/* =========================================================
+   ТРАНСПОРТ
+========================================================= */
+
+function renderTransport(){
+
+    const p=player();
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Транспорт</h2>
+
+        <p>
+            Транспорт текущего персонажа:
+            <b>${world.vehicles[p.vehicle]?.name || "нет"}</b>
+        </p>
+
+        <div class="grid">
+            ${Object.entries(world.vehicles).map(([id,v])=>`
+                <div class="card">
+                    <div style="font-size:35px">${v.emoji}</div>
+                    <b>${v.name}</b><br>
+                    <span class="small">
+                        PNG: assets/vehicles/${id}.PNG
+                    </span>
+
+                    <br><br>
+
+                    <button onclick="giveVehicle('${id}')">
+                        Получить
+                    </button>
+                </div>
+            `).join("")}
+        </div>
+    `;
+}
+
+function giveVehicle(id){
+
+    const p=player();
+
+    if(p.role==="Мэр"){
+        p.vehicle=id;
+        saveWorld();
+        renderTransport();
+        return;
+    }
+
+    if(p.money<5000){
+        alert("Недостаточно личных денег.");
+        return;
+    }
+
+    p.money-=5000;
+    p.vehicle=id;
+
+    saveWorld();
+    renderTransport();
+}
+
+
+/* =========================================================
+   ОРУЖИЕ
+========================================================= */
+
+function renderWeapons(){
+
+    const p=player();
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Оружие</h2>
+
+        <p>
+            Текущее оружие:
+            <b>${world.weapons[p.weapon]?.name || "нет"}</b>
+        </p>
+
+        <div class="grid">
+            ${Object.entries(world.weapons).map(([id,w])=>`
+                <div class="card">
+                    <div style="font-size:35px">${w.emoji}</div>
+                    <b>${w.name}</b><br>
+                    <span class="small">
+                        PNG: assets/weapons/${id}.PNG
+                    </span>
+
+                    <br><br>
+
+                    <button onclick="takeWeapon('${id}')">
+                        Взять
+                    </button>
+                </div>
+            `).join("")}
+        </div>
+    `;
+}
+
+function takeWeapon(id){
+    player().weapon=id;
+    saveWorld();
+    renderWeapons();
+}
+
+
+/* =========================================================
+   ШАХТА
+========================================================= */
+
+function renderMine(){
+
+    const p=player();
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Шахта</h2>
+
+        <p>Попытка добычи: <b>1 раз в день</b>.</p>
+
+        <div class="card">
+            Металл персонажа:
+            <b>${p.metal}</b>
+        </div>
+
+        <br>
+
+        <button
+            ${p.mineUsed ? "disabled" : ""}
+            onclick="mine()">
+
+            ${p.mineUsed ? "Сегодня уже добывал" : "Идти в шахту"}
+        </button>
+
+        <br><br>
+
+        <div class="card">
+            Металл можно продать и получить личные деньги.
+        </div>
+    `;
+}
+
+function mine(){
+
+    const p=player();
+
+    if(p.mineUsed){
+        alert("Сегодня попытка уже использована.");
+        return;
+    }
+
+    const amount=Math.floor(Math.random()*6)+1;
+
+    p.metal+=amount;
+    p.mineUsed=true;
+
+    saveWorld();
+    alert("Добыто металла: "+amount);
+
+    renderMine();
+}
+
+
+/* =========================================================
+   КАЗНА
+========================================================= */
+
+function renderTreasury(){
+
+    const p=player();
+
+    if(p.role!=="Мэр"){
+        document.getElementById("sheet").innerHTML=`
+            <h2>Казна города</h2>
+            <div class="card danger">
+                Доступ закрыт.
+                <br>
+                Казной распоряжается мэр.
+            </div>
+        `;
+        return;
+    }
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Казна города</h2>
+
+        <div class="card">
+            <b>Городская казна</b>
+            <div class="money">${money(world.treasury)}</div>
+        </div>
+
+        <br>
+
+        <button onclick="addTreasury()">
+            Внести 1 000 ₽ из личных денег
+        </button>
+
+        <button onclick="takeTreasury()">
+            Взять 1 000 ₽ из казны
+        </button>
+    `;
+}
+
+function addTreasury(){
+
+    const p=player();
+
+    if(p.money<1000){
+        alert("Недостаточно личных денег.");
+        return;
+    }
+
+    p.money-=1000;
+    world.treasury+=1000;
+
+    saveWorld();
+    renderTreasury();
+}
+
+function takeTreasury(){
+
+    if(world.treasury<1000){
+        alert("В казне недостаточно денег.");
+        return;
+    }
+
+    player().money+=1000;
+    world.treasury-=1000;
+
+    saveWorld();
+    renderTreasury();
+}
+
+
+/* =========================================================
+   БАНК
+========================================================= */
+
+function renderBank(){
+
+    const p=player();
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Банк</h2>
+
+        <div class="card">
+            Личные деньги:
+            <b>${money(p.money)}</b>
+        </div>
+
+        <div class="card">
+            Банковский счёт:
+            <b>${money(p.bank)}</b>
+        </div>
+
+        <br>
+
+        <button onclick="bankDeposit()">
+            Положить 1 000 ₽
+        </button>
+
+        <button onclick="bankWithdraw()">
+            Снять 1 000 ₽
+        </button>
+    `;
+}
+
+function bankDeposit(){
+
+    const p=player();
+
+    if(p.money<1000){
+        alert("Недостаточно денег.");
+        return;
+    }
+
+    p.money-=1000;
+    p.bank+=1000;
+
+    saveWorld();
+    renderBank();
+}
+
+function bankWithdraw(){
+
+    const p=player();
+
+    if(p.bank<1000){
+        alert("На счёте недостаточно денег.");
+        return;
+    }
+
+    p.bank-=1000;
+    p.money+=1000;
+
+    saveWorld();
+    renderBank();
+}
+
+
+/* =========================================================
+   ДОМА
+========================================================= */
+
+function renderHouses(){
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Дома</h2>
+
+        <div class="grid">
+
+            <div class="card">
+                🏠<br>
+                Дом
+            </div>
+
+            <div class="card">
+                🏛️<br>
+                Дом мэра
+            </div>
+
+            <div class="card">
+                🏡<br>
+                Большой дом
+            </div>
+
+            <div class="card">
+                🚐<br>
+                Фургон-дом
+            </div>
+
+        </div>
+    `;
+}
+
+
+/* =========================================================
+   БОЙ
+========================================================= */
+
+function renderBattle(){
+
+    if(!battleState){
+
+        document.getElementById("sheet").innerHTML=`
+            <h2>Бой</h2>
+
+            <div class="card">
+                <b>Правило равных сторон</b><br><br>
+
+                Допустимые варианты:
+                <br>1 × 1
+                <br>2 × 2
+                <br>3 × 3
+                <br>4 × 4
+                <br>5 × 5
+
+                <br><br>
+
+                3 × 5 и другие неравные составы
+                <b>запрещены</b>.
+            </div>
+
+            <br>
+
+            <button onclick="startBattle(1)">1 × 1</button>
+            <button onclick="startBattle(2)">2 × 2</button>
+            <button onclick="startBattle(3)">3 × 3</button>
+            <button onclick="startBattle(4)">4 × 4</button>
+            <button onclick="startBattle(5)">5 × 5</button>
+        `;
+
+        return;
+    }
+
+    renderActiveBattle();
+}
+
+function startBattle(count){
+
+    const available=[...world.characters]
+        .filter(c=>c.health>0);
+
+    if(available.length<count*2){
+        alert("Недостаточно живых участников.");
+        return;
+    }
+
+    /*
+       Равномерное начало:
+       одинаковое количество людей с каждой стороны.
+    */
+
+    const shuffled=available.sort(()=>Math.random()-0.5);
+
+    battleState={
+        left:shuffled.slice(0,count),
+        right:shuffled.slice(count,count*2),
+        log:"Бой начался.\nСтороны равны.\n",
+        finished:false
+    };
+
+    renderActiveBattle();
+}
+
+function renderActiveBattle(){
+
+    const b=battleState;
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Бой</h2>
+
+        <div class="battle">
+
+            <div class="side">
+                <h3>СТОРОНА 1</h3>
+
+                ${b.left.map(c=>fighterHTML(c)).join("")}
+            </div>
+
+            <div class="side">
+                <h3>СТОРОНА 2</h3>
+
+                ${b.right.map(c=>fighterHTML(c)).join("")}
+            </div>
+
+        </div>
+
+        <br>
+
+        <button onclick="battleTurn()" ${b.finished?"disabled":""}>
+            Следующий удар
+        </button>
+
+        <button onclick="battleState=null;renderBattle()">
+            Новый бой
+        </button>
+
+        <h3>Ход боя</h3>
+
+        <div class="log">${b.log}</div>
+    `;
+}
+
+function fighterHTML(c){
+
+    return `
+        <div class="fighter">
+            <b>${c.name}</b><br>
+            ${c.role}<br>
+            Здоровье: ${Math.max(0,c.health)}
+        </div>
+    `;
+}
+
+function battleTurn(){
+
+    const b=battleState;
+
+    const left=b.left.filter(c=>c.health>0);
+    const right=b.right.filter(c=>c.health>0);
+
+    if(!left.length || !right.length){
+        finishBattle();
+        return;
+    }
+
+    const attackers=Math.random()<0.5?left:right;
+    const defenders=attackers===left?right:left;
+
+    const attacker=
+        attackers[Math.floor(Math.random()*attackers.length)];
+
+    const defender=
+        defenders[Math.floor(Math.random()*defenders.length)];
+
+    const hit=Math.floor(Math.random()*100);
+
+    let damage=0;
+    let wound="лёгкое ранение";
+
+    if(hit<8){
+        damage=100;
+        wound="смертельное попадание";
+    }else if(hit<25){
+        damage=35;
+        wound="тяжёлое ранение";
+    }else{
+        damage=10+Math.floor(Math.random()*16);
+    }
+
+    defender.health=Math.max(0,defender.health-damage);
+
+    b.log+=
+        `${attacker.name} атакует ${defender.name} — ${wound}. `+
+        `Урон: ${damage}.\n`;
+
+    if(defender.health<=0){
+        b.log+=`${defender.name} больше не может продолжать бой.\n`;
+    }
+
+    saveWorld();
+
+    if(
+        b.left.every(c=>c.health<=0) ||
+        b.right.every(c=>c.health<=0)
+    ){
+        finishBattle();
+    }
+
+    renderActiveBattle();
+}
+
+function finishBattle(){
+
+    const leftAlive=battleState.left.filter(c=>c.health>0).length;
+    const rightAlive=battleState.right.filter(c=>c.health>0).length;
+
+    battleState.finished=true;
+
+    if(leftAlive===0 && rightAlive===0){
+        battleState.log+="Обе стороны выбыли.\n";
+    }else if(leftAlive===0){
+        battleState.log+="Победила сторона 2.\n";
+    }else{
+        battleState.log+="Победила сторона 1.\n";
+    }
+
+    saveWorld();
+}
+
+
+/* =========================================================
+   СОХРАНЕНИЯ
+========================================================= */
+
+function renderSaves(){
+
+    document.getElementById("sheet").innerHTML=`
+        <h2>Сохранение</h2>
+
+        <button onclick="saveWorld();alert('Игра сохранена')">
+            💾 Сохранить
+        </button>
+
+        <button onclick="newDay()">
+            🌅 Новый день
+        </button>
+
+        <br><br>
+
+        <div class="card danger">
+            <b>Сброс игры</b><br><br>
+            Вернуть первоначальный мир.
+            <br><br>
+            <button onclick="resetGame()">Сбросить</button>
+        </div>
+    `;
+}
+
+function newDay(){
+
+    world.day++;
+
+    world.characters.forEach(c=>{
+        c.mineUsed=false;
+    });
+
+    saveWorld();
+
+    alert("Наступил день "+world.day);
+}
+
+function resetGame(){
+
+    if(!confirm("Точно начать заново?")) return;
+
+    world=structuredClone(defaultWorld);
+    currentPlayerId="thomas";
+
+    saveWorld();
+    openSheet("character");
+}
+
+
+/* =========================================================
+   ЧАСЫ
+========================================================= */
+
+function updateClock(){
+
+    const now=new Date();
+
+    document.getElementById("clock").textContent=
+        now.toLocaleTimeString("ru-RU");
+}
+
+setInterval(updateClock,1000);
+updateClock();
+
+openSheet("character");
+
+</script>
+
+</body>
+</html>
